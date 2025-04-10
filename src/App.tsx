@@ -3,6 +3,7 @@ import MainLayout from './layouts/MainLayout';
 import Dashboard from './views/Dashboard';
 import Course from './views/Course';
 import CoursesList from './views/CoursesList';
+import Register from './views/Register';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="courses/01" element={<Course />} />
           <Route path="courses" element={<CoursesList />} />
         </Route>
+        <Route path="/register" element={<Register />} />
       </Routes>
     </Router>
   );
