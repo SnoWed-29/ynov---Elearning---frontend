@@ -1,19 +1,26 @@
-import React, { useState } from 'react';
+// pages/register.tsx
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
-import { BookOpen } from 'lucide-react'; 
 import logo from '@/assets/logo500.png'; // Adjust the path as necessary
+import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { app } from "@/config/firebase.config"; // Import the initialized Firebase app
+import { sendRegistrationData } from '@/services/auth'; // Import the new function
+import { fetchLevels, Level ,fetchSpecialities, Speciality } from '@/services/level'; 
+
 interface FormData {
     userName: string;
     email: string;
     password: string;
     dob?: string;
     profile_picture?: File | null;
-    niveauxSpecialiteId: string;
+    Specialite: string;
+    niveau: string; 
+    fullName: string;
 }
 
 function Register() {
@@ -23,8 +30,49 @@ function Register() {
         password: '',
         dob: '',
         profile_picture: null,
-        niveauxSpecialiteId: '',
+        Specialite: '',
+        niveau: '' ,
+        fullName: ''// Initialize as empty string
     });
+
+    const [levels, setLevels] = useState<Level[]>([]);
+    const [specialities, setSpecialities] = useState<Speciality[]>([]);
+
+    useEffect(() => {
+        const loadLevels = async () => {
+            try {
+                const fetchedLevels = await fetchLevels();
+                setLevels(fetchedLevels);
+            } catch (error) {
+                console.error('Failed to load levels:', error);
+            }
+        };
+
+        loadLevels();
+    }, []);
+
+    const handleLevelChange = async (levelId: string) => {
+        setFormData({ ...formData, niveau: levelId, Specialite: '' }); // Reset Specialite when niveau changes
+        try {
+            const fetchedSpecialities = await fetchSpecialities(Number(levelId));
+            setSpecialities(fetchedSpecialities);
+        } catch (error) {
+            console.error('Failed to load specialities:', error);
+        }
+    };
+
+    useEffect(() => {
+        const loadSpecialities = async () => {
+            try {
+                const fetchedSpecialities = await fetchSpecialities(Number(formData.niveau));
+                setSpecialities(fetchedSpecialities);
+            } catch (error) {
+                console.error('Failed to load specialities:', error);
+            }
+        };
+
+        loadSpecialities();
+    }, []);
 
     const handleChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -41,10 +89,33 @@ function Register() {
         }
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        // Handle form submission logic here (e.g., API call)
-        console.log('Form Data:', formData);
+        try {
+            const auth = getAuth(app); // Pass the initialized app to getAuth
+            const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
+            const user = userCredential.user;
+            console.log('User registered successfully:', user);
+
+            // After successful Firebase user creation, send data to backend
+            const registrationData = {
+                uid: user.uid,
+                ...formData,
+            };
+
+            const response = await sendRegistrationData(registrationData);
+            if (response.ok) {
+                console.log('Registration data sent to backend successfully');
+                // Optionally redirect the user or show a success message
+            } else {
+                console.error('Failed to send registration data to backend');
+                // Optionally display an error message to the user
+            }
+
+        } catch (error) {
+            console.error('Error during form submission:', error);
+            // Optionally display an error message to the user
+        }
     };
 
     return (
@@ -74,7 +145,7 @@ function Register() {
                         )}
                     >
                       <img src={logo} className="animate-pulse" alt="" />
-                       
+
                         <p className="text-gray-300 text-center text-sm">
                             Create your account and start learning!
                         </p>
@@ -100,6 +171,24 @@ function Register() {
                                     type="text"
                                     name="userName"
                                     value={formData.userName}
+                                    onChange={handleChange}
+                                    placeholder="Enter your username"
+                                    required
+                                    className={cn(
+                                        'bg-black/20 text-white border-blue-500/30', // Changed border color
+                                        'placeholder:text-gray-400 focus:ring-blue-500' // Changed focus ring
+                                    )}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="userName" className="text-gray-200">
+                                    Full Name
+                                </Label>
+                                <Input
+                                    id="userName"
+                                    type="text"
+                                    name="fullName"
+                                    value={formData.fullName}
                                     onChange={handleChange}
                                     placeholder="Enter your username"
                                     required
@@ -179,38 +268,39 @@ function Register() {
                                 />
                             </div>
                             <div>
-                                <Label htmlFor="niveauxSpecialiteId" className="text-gray-200">
-                                    Niveux
+                                <Label htmlFor="niveau" className="text-gray-200">
+                                    Niveaux
                                 </Label>
                                 <Select
-                                    onValueChange={(value) => setFormData({ ...formData, niveauxSpecialiteId: value })}
-                                    value={formData.niveauxSpecialiteId}
+                                    onValueChange={handleLevelChange}
+                                    value={formData.niveau}
                                 >
                                     <SelectTrigger
-                                        className={cn(
-                                            'w-full bg-black/20 text-white border-blue-500/30', // Changed border color
-                                            'focus:ring-blue-500'  // Changed focus ring
-                                        )}
+                                        className="w-full bg-black/20 text-white border-blue-500/30 focus:ring-blue-500"
                                     >
                                         <SelectValue placeholder="Select a level" className="text-gray-400" />
                                     </SelectTrigger>
-                                    <SelectContent className="bg-gray-800 border-blue-500/30 text-white"> {/* Changed border color */}
-                                        <SelectItem value="1" className="hover:bg-blue-500/20 focus:bg-blue-500/20">B1</SelectItem> {/* Changed hover color */}
-                                        <SelectItem value="2" className="hover:bg-blue-500/20 focus:bg-blue-500/20">B2</SelectItem>
-                                        <SelectItem value="3" className="hover:bg-blue-500/20 focus:bg-blue-500/20">B3</SelectItem>
-                                        <SelectItem value="3" className="hover:bg-blue-500/20 focus:bg-blue-500/20">M1</SelectItem>
-                                        <SelectItem value="3" className="hover:bg-blue-500/20 focus:bg-blue-500/20">M2</SelectItem>
-                                        {/* Add more options as needed */}
+                                    <SelectContent className="bg-gray-800 border-blue-500/30 text-white">
+                                        {levels.map((level) => (
+                                            <SelectItem
+                                                key={level.id}
+                                                value={level.id.toString()} // Ensure the value is a string
+                                                className="hover:bg-blue-500/20 focus:bg-blue-500/20"
+                                            >
+                                                {level.levelName}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </div>
                             <div>
-                                <Label htmlFor="niveauxSpecialiteId" className="text-gray-200">
-                                    Speciality Level
+                                <Label htmlFor="Specialite" className="text-gray-200">
+                                    Specialities
                                 </Label>
                                 <Select
-                                    onValueChange={(value) => setFormData({ ...formData, niveauxSpecialiteId: value })}
-                                    value={formData.niveauxSpecialiteId}
+                                    onValueChange={(value) => setFormData({ ...formData, Specialite: value })}
+                                    value={formData.Specialite}
+                                    disabled={!formData.niveau} // Disable if no niveau is selected
                                 >
                                     <SelectTrigger
                                         className={cn(
@@ -218,13 +308,18 @@ function Register() {
                                             'focus:ring-blue-500'  // Changed focus ring
                                         )}
                                     >
-                                        <SelectValue placeholder="Select a level" className="text-gray-400" />
+                                        <SelectValue placeholder="Select a speciality" className="text-gray-400" />
                                     </SelectTrigger>
                                     <SelectContent className="bg-gray-800 border-blue-500/30 text-white"> {/* Changed border color */}
-                                        <SelectItem value="1" className="hover:bg-blue-500/20 focus:bg-blue-500/20">Beginner</SelectItem> {/* Changed hover color */}
-                                        <SelectItem value="2" className="hover:bg-blue-500/20 focus:bg-blue-500/20">Intermediate</SelectItem>
-                                        <SelectItem value="3" className="hover:bg-blue-500/20 focus:bg-blue-500/20">Advanced</SelectItem>
-                                        {/* Add more options as needed */}
+                                        {specialities.map((speciality) => (
+                                            <SelectItem
+                                                key={speciality.id}
+                                                value={speciality.id.toString()} // Ensure the value is a string
+                                                className="hover:bg-blue-500/20 focus:bg-blue-500/20"
+                                            >
+                                                {speciality.specialityName}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </div>
