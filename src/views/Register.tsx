@@ -1,6 +1,12 @@
-import React from 'react'
-import logo from '../assets/logo500.png'
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
+import { BookOpen } from 'lucide-react'; 
+import logo from '@/assets/logo500.png'; // Adjust the path as necessary
 interface FormData {
     userName: string;
     email: string;
@@ -8,7 +14,7 @@ interface FormData {
     dob?: string;
     profile_picture?: File | null;
     niveauxSpecialiteId: string;
-  }
+}
 
 function Register() {
     const [formData, setFormData] = useState<FormData>({
@@ -18,171 +24,228 @@ function Register() {
         dob: '',
         profile_picture: null,
         niveauxSpecialiteId: '',
-      });
-    
-      const handleChange = (
+    });
+
+    const handleChange = (
         event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-      ) => {
+    ) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
-      };
-    
-      const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.files && event.target.files[0]) {
-          setFormData({ ...formData, profile_picture: event.target.files[0] });
+            setFormData({ ...formData, profile_picture: event.target.files[0] });
         } else {
-          setFormData({ ...formData, profile_picture: null });
+            setFormData({ ...formData, profile_picture: null });
         }
-      };
-    
-      const handleSubmit = (event: React.FormEvent) => {
+    };
+
+    const handleSubmit = (event: React.FormEvent) => {
         event.preventDefault();
         // Handle form submission logic here (e.g., API call)
         console.log('Form Data:', formData);
-      };
-    
-  return (
-    <section className='w-full h-screen text-[#F7F7F5] bg-[#302e2d] p-4'>
-        <div className="grid grid-cols-5 w-full h-screen ">
-            <div className="col-span-2 bg-[#BD94F4] p-4 h-screen rounded-l-4xl flex justify-center items-center">
-                <img src={logo}  />
-            </div>
-            <div className="col-span-3 bg-[#F7F7F5] text-[#BD94F4] rounded-r-4xl h-fit">
-            <div className="flex justify-center items-center h-screen">
-                <div className="rounded px-8 pt-6 pb-8 mb-4 w-full ">
-                    <h2 className="block text-gray-700 text-2xl font-bold mb-6 text-center">
-                    Register
-                    </h2>
-                    <form onSubmit={handleSubmit}>
-                    <div className="mb-4">
-                        <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="userName"
-                        >
-                        User Name
-                        </label>
-                        <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="userName"
-                        type="text"
-                        name="userName"
-                        value={formData.userName}
-                        onChange={handleChange}
-                        placeholder="Enter your username"
-                        required
-                        />
+    };
+
+    return (
+        <section
+            className={cn(
+                'w-full min-h-screen bg-gradient-to-br from-blue-900/50 to-[#BD94F4]/50 ', // Darker background
+                'flex items-center justify-center p-4 md:p-8'
+            )}
+        >
+            <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6, ease: 'easeInOut' }}
+                className={cn(
+                    'bg-white/5 backdrop-blur-lg rounded-3xl shadow-2xl',
+                    'w-full w-4/5 h-fit p-6 md:p-10',
+                    'border border-white/10'
+                )}
+            >
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Left Side: Branding/Illustration */}
+                    <div
+                        className={cn(
+                            'hidden md:flex flex-col items-center justify-center',
+                            'bg-gradient-to-br rounded-2xl', // Darker accent
+                            'p-6 md:p-8  from-blue-900/50 to-[#BD94F4]/50'
+                        )}
+                    >
+                      <img src={logo} className="animate-pulse" alt="" />
+                       
+                        <p className="text-gray-300 text-center text-sm">
+                            Create your account and start learning!
+                        </p>
                     </div>
-                    <div className="mb-4">
-                        <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="email"
+
+                    {/* Right Side: Registration Form */}
+                    <div className="space-y-6">
+                        <h2
+                            className={cn(
+                                'text-3xl font-semibold text-white text-center',
+                                'mb-6'
+                            )}
                         >
-                        Email
-                        </label>
-                        <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        placeholder="Enter your email"
-                        required
-                        />
+                            Register
+                        </h2>
+                        <form onSubmit={handleSubmit} className="space-y-4">
+                            <div>
+                                <Label htmlFor="userName" className="text-gray-200">
+                                    User Name
+                                </Label>
+                                <Input
+                                    id="userName"
+                                    type="text"
+                                    name="userName"
+                                    value={formData.userName}
+                                    onChange={handleChange}
+                                    placeholder="Enter your username"
+                                    required
+                                    className={cn(
+                                        'bg-black/20 text-white border-blue-500/30', // Changed border color
+                                        'placeholder:text-gray-400 focus:ring-blue-500' // Changed focus ring
+                                    )}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="email" className="text-gray-200">
+                                    Email
+                                </Label>
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleChange}
+                                    placeholder="Enter your email"
+                                    required
+                                    className={cn(
+                                        'bg-black/20 text-white border-blue-500/30', // Changed border color
+                                        'placeholder:text-gray-400 focus:ring-blue-500' // Changed focus ring
+                                    )}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="password" className="text-gray-200">
+                                    Password
+                                </Label>
+                                <Input
+                                    id="password"
+                                    type="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    placeholder="Enter your password"
+                                    required
+                                    className={cn(
+                                        'bg-black/20 text-white border-blue-500/30',  // Changed border color
+                                        'placeholder:text-gray-400 focus:ring-blue-500' // Changed focus ring
+                                    )}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="dob" className="text-gray-200">
+                                    Date of Birth (Optional)
+                                </Label>
+                                <Input
+                                    id="dob"
+                                    type="date"
+                                    name="dob"
+                                    value={formData.dob}
+                                    onChange={handleChange}
+                                    className={cn(
+                                        'bg-black/20 text-white border-blue-500/30', // Changed border color
+                                        'focus:ring-blue-500' // Changed focus ring
+                                    )}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="profile_picture" className="text-gray-200">
+                                    Profile Picture (Optional)
+                                </Label>
+                                <Input
+                                    id="profile_picture"
+                                    type="file"
+                                    name="profile_picture"
+                                    onChange={handleFileChange}
+                                    className={cn(
+                                        'bg-black/20 text-white border-blue-500/30', // Changed border color
+                                        'focus:ring-blue-500 file:text-blue-300 file:border-blue-500/30', // Changed file color
+                                        'file:bg-blue-500/20 file:rounded-md file:px-4 file:py-2',  // Changed file color
+                                        'file:mr-4 file:cursor-pointer'
+                                    )}
+                                />
+                            </div>
+                            <div>
+                                <Label htmlFor="niveauxSpecialiteId" className="text-gray-200">
+                                    Niveux
+                                </Label>
+                                <Select
+                                    onValueChange={(value) => setFormData({ ...formData, niveauxSpecialiteId: value })}
+                                    value={formData.niveauxSpecialiteId}
+                                >
+                                    <SelectTrigger
+                                        className={cn(
+                                            'w-full bg-black/20 text-white border-blue-500/30', // Changed border color
+                                            'focus:ring-blue-500'  // Changed focus ring
+                                        )}
+                                    >
+                                        <SelectValue placeholder="Select a level" className="text-gray-400" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-gray-800 border-blue-500/30 text-white"> {/* Changed border color */}
+                                        <SelectItem value="1" className="hover:bg-blue-500/20 focus:bg-blue-500/20">B1</SelectItem> {/* Changed hover color */}
+                                        <SelectItem value="2" className="hover:bg-blue-500/20 focus:bg-blue-500/20">B2</SelectItem>
+                                        <SelectItem value="3" className="hover:bg-blue-500/20 focus:bg-blue-500/20">B3</SelectItem>
+                                        <SelectItem value="3" className="hover:bg-blue-500/20 focus:bg-blue-500/20">M1</SelectItem>
+                                        <SelectItem value="3" className="hover:bg-blue-500/20 focus:bg-blue-500/20">M2</SelectItem>
+                                        {/* Add more options as needed */}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div>
+                                <Label htmlFor="niveauxSpecialiteId" className="text-gray-200">
+                                    Speciality Level
+                                </Label>
+                                <Select
+                                    onValueChange={(value) => setFormData({ ...formData, niveauxSpecialiteId: value })}
+                                    value={formData.niveauxSpecialiteId}
+                                >
+                                    <SelectTrigger
+                                        className={cn(
+                                            'w-full bg-black/20 text-white border-blue-500/30', // Changed border color
+                                            'focus:ring-blue-500'  // Changed focus ring
+                                        )}
+                                    >
+                                        <SelectValue placeholder="Select a level" className="text-gray-400" />
+                                    </SelectTrigger>
+                                    <SelectContent className="bg-gray-800 border-blue-500/30 text-white"> {/* Changed border color */}
+                                        <SelectItem value="1" className="hover:bg-blue-500/20 focus:bg-blue-500/20">Beginner</SelectItem> {/* Changed hover color */}
+                                        <SelectItem value="2" className="hover:bg-blue-500/20 focus:bg-blue-500/20">Intermediate</SelectItem>
+                                        <SelectItem value="3" className="hover:bg-blue-500/20 focus:bg-blue-500/20">Advanced</SelectItem>
+                                        {/* Add more options as needed */}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <Button
+                                type="submit"
+                                className={cn(
+                                    'w-full bg-gradient-to-r from-blue-500 to-purple-500 text-white', // Consistent gradient
+                                    'hover:from-blue-600 hover:to-purple-600',
+                                    'py-3 text-lg font-semibold rounded-full shadow-lg',
+                                    'transition-all duration-300 transform hover:scale-105',
+                                    'focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50' // Changed focus ring
+                                )}
+                            >
+                                Register
+                            </Button>
+                        </form>
                     </div>
-                    <div className="mb-4">
-                        <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="password"
-                        >
-                        Password
-                        </label>
-                        <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="password"
-                        type="password"
-                        name="password"
-                        value={formData.password}
-                        onChange={handleChange}
-                        placeholder="Enter your password"
-                        required
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="dob"
-                        >
-                        Date of Birth (Optional)
-                        </label>
-                        <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="dob"
-                        type="date"
-                        name="dob"
-                        value={formData.dob}
-                        onChange={handleChange}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="profile_picture"
-                        >
-                        Profile Picture (Optional)
-                        </label>
-                        <input
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="profile_picture"
-                        type="file"
-                        name="profile_picture"
-                        onChange={handleFileChange}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label
-                        className="block text-gray-700 text-sm font-bold mb-2"
-                        htmlFor="niveauxSpecialiteId"
-                        >
-                        Speciality Level
-                        </label>
-                        <select
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                        id="niveauxSpecialiteId"
-                        name="niveauxSpecialiteId"
-                        value={formData.niveauxSpecialiteId}
-                        onChange={handleChange}
-                        required
-                        >
-                        <option value="">Select a level</option>
-                        <option value="1">Beginner</option>
-                        <option value="2">Intermediate</option>
-                        <option value="3">Advanced</option>
-                        {/* Add more options as needed */}
-                        </select>
-                    </div>
-                    <div className="flex items-center justify-between">
-                        <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                        type="submit"
-                        >
-                        Register
-                        </button>
-                        {/* Optional: Add a link to login page */}
-                        {/* <a
-                        className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
-                        href="#"
-                        >
-                        Already have an account? Login
-                        </a> */}
-                    </div>
-                    </form>
                 </div>
-            </div>
-            </div>
-        </div>
-    </section>
-  )
+            </motion.div>
+        </section>
+    );
 }
 
-export default Register
+export default Register;

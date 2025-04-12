@@ -1,18 +1,18 @@
 import { MessageCircle } from 'lucide-react'
 import Kpi from '../components/Kpi'
-import CoursesSection from '../components/coursesSection'
+import CoursesSection from '../components/CoursesSection'
 
 
 function Dashboard() {
   return (
-    <div className='w-full h-screen'>
+    <div className='w-full h-screen ' >
         <div className="flex flex-col w-full my-3 ">
             <Kpi />
             <div className="grid grid-cols-3 gap-3 my-4">
                 <div className="col-span-2">
                     <CoursesSection />
                 </div>
-                <div className="col-span-1 flex flex-col p-4 bg-[#302e2d] border rounded-4xl text-[#f7f7f5]">
+                <div className="col-span-1 flex flex-col p-4 bg-gradient-to-br from-blue-900/50 to-[#BD94F4]/50  border rounded-4xl text-[#f7f7f5]">
                     <div className="flex w-full p-4">
                         <h2 className='text-xl font-semibold flex items-center'><MessageCircle className='w-10 h-10 text-[##FCCC42]'/> Chat Rooms</h2>
                     </div>

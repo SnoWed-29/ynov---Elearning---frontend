@@ -4,6 +4,7 @@ import Dashboard from './views/Dashboard';
 import Course from './views/Course';
 import CoursesList from './views/CoursesList';
 import Register from './views/Register';
+import Login from './views/Login';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="courses" element={<CoursesList />} />
         </Route>
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </Router>
   );

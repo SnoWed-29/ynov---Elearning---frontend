@@ -8,10 +8,10 @@ function MainLayout() {
   const pathSegments = location.pathname.split('/').filter(segment => segment !== '');
 
   return (
-    <div className="h-screen bg-[#302e2d] flex items-center justify-center w-full">
+    <div className="h-screen bg-gradient-to-br from-blue-900/50 to-[#BD94F4]/50  flex items-center justify-center w-full">
       <div className="flex w-full h-full  overflow-hidden shadow-lg">
         <Sidebar />
-        <div className="flex flex-col flex-1 py-4">
+        <div className="flex flex-col flex-1 p-4 ">
 
           <div className="px-6 py-2 overflow-y-auto bg-[#F7F7F5] flex-1 rounded-l-4xl rounded-r-4xl ">
             <div className="flex w-full justify-between">
