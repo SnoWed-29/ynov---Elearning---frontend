@@ -4,8 +4,8 @@ interface RegistrationData {
     uid: string;
     userName: string;
     email: string;
+    password: string; // Add password to the interface
     dob?: string;
-    profile_picture?: File | null;
     Specialite: string;
     fullName: string;
     niveau: string; // Assuming niveau is a string from the Select component
@@ -13,23 +13,30 @@ interface RegistrationData {
 
 export const sendRegistrationData = async (data: RegistrationData): Promise<Response> => {
     try {
-        const response = await fetch(`${BACKEND_URL}/api/register`, { // Use the BACKEND_URL variable
+        const formData = new FormData();
+        formData.append('uid', data.uid);
+        formData.append('fullName', data.fullName);
+        formData.append('userName', data.userName);
+        formData.append('email', data.email);
+        formData.append('password', data.password); // Include password in the form data
+        formData.append('specialite', data.Specialite); // Correct field name
+        formData.append('niveau',data.niveau)
+        if (data.dob) {
+            formData.append('dob', data.dob);
+        }
+
+        const response = await fetch(`${BACKEND_URL}/api/register`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
+            body: formData, // Send FormData object
         });
 
         if (!response.ok) {
-            const error = await response.json();
-            console.error('Error sending registration data to backend:', error);
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`Failed to register: ${response.statusText}`);
         }
 
         return response;
-    } catch (error: any) {
-        console.error('Error sending registration data:', error);
+    } catch (error) {
+        console.error('Error during registration:', error);
         throw error;
     }
 };

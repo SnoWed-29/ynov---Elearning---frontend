@@ -5,22 +5,37 @@ import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import { BookOpen } from 'lucide-react'; // For a consistent icon
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '@/config/firebase.config';
+import { useUser } from '@/contexts/UserContext';
+import { Navigate } from 'react-router-dom';
 
-function Login() {
+const Login = () => {
+    const { user, setUser } = useUser();
     const [formData, setFormData] = useState({
         email: '',
         password: '',
     });
+
+    if (user) {
+        return <Navigate to="/" />;
+    }
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (event: React.FormEvent) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-        // Handle form submission logic here
-        console.log('Login Form Data:', formData);
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+            const user = userCredential.user;
+            console.log('Login successful:', user);
+            setUser(user); // Set the logged-in user in context
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
     };
 
     return (

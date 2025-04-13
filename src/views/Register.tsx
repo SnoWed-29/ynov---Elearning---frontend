@@ -8,7 +8,7 @@ import { cn } from '@/lib/utils';
 import { motion } from 'framer-motion';
 import logo from '@/assets/logo500.png'; // Adjust the path as necessary
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { app } from "@/config/firebase.config"; // Import the initialized Firebase app
+import { app } from '../config/firebase.config'
 import { sendRegistrationData } from '@/services/auth'; // Import the new function
 import { fetchLevels, Level ,fetchSpecialities, Speciality } from '@/services/level'; 
 
@@ -81,14 +81,6 @@ function Register() {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (event.target.files && event.target.files[0]) {
-            setFormData({ ...formData, profile_picture: event.target.files[0] });
-        } else {
-            setFormData({ ...formData, profile_picture: null });
-        }
-    };
-
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
         try {
@@ -96,22 +88,29 @@ function Register() {
             const userCredential = await createUserWithEmailAndPassword(auth, formData.email, formData.password);
             const user = userCredential.user;
             console.log('User registered successfully:', user);
-
+    
             // After successful Firebase user creation, send data to backend
             const registrationData = {
                 uid: user.uid,
-                ...formData,
+                fullName: formData.fullName,
+                userName: formData.userName,
+                email: formData.email,
+                password: formData.password, // Consider if you need to send this to your backend
+                dob: formData.dob,
+                profile_picture: formData.profile_picture,
+                Specialite: formData.Specialite, // Use Specialite here
+                niveau: formData.niveau, // Include niveau in the registration data
             };
-
+    
             const response = await sendRegistrationData(registrationData);
             if (response.ok) {
-                console.log('Registration data sent to backend successfully');
+                console.log('Registration data sent to backend successfully', response);
                 // Optionally redirect the user or show a success message
             } else {
-                console.error('Failed to send registration data to backend');
+                console.error('Failed to send registration data to backend:', response.statusText);
                 // Optionally display an error message to the user
             }
-
+    
         } catch (error) {
             console.error('Error during form submission:', error);
             // Optionally display an error message to the user
@@ -181,11 +180,11 @@ function Register() {
                                 />
                             </div>
                             <div>
-                                <Label htmlFor="userName" className="text-gray-200">
+                                <Label htmlFor="fullName" className="text-gray-200">
                                     Full Name
                                 </Label>
                                 <Input
-                                    id="userName"
+                                    id="fullName"
                                     type="text"
                                     name="fullName"
                                     value={formData.fullName}
@@ -247,23 +246,6 @@ function Register() {
                                     className={cn(
                                         'bg-black/20 text-white border-blue-500/30', // Changed border color
                                         'focus:ring-blue-500' // Changed focus ring
-                                    )}
-                                />
-                            </div>
-                            <div>
-                                <Label htmlFor="profile_picture" className="text-gray-200">
-                                    Profile Picture (Optional)
-                                </Label>
-                                <Input
-                                    id="profile_picture"
-                                    type="file"
-                                    name="profile_picture"
-                                    onChange={handleFileChange}
-                                    className={cn(
-                                        'bg-black/20 text-white border-blue-500/30', // Changed border color
-                                        'focus:ring-blue-500 file:text-blue-300 file:border-blue-500/30', // Changed file color
-                                        'file:bg-blue-500/20 file:rounded-md file:px-4 file:py-2',  // Changed file color
-                                        'file:mr-4 file:cursor-pointer'
                                     )}
                                 />
                             </div>

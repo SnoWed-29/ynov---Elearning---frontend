@@ -1,10 +1,25 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Home, Settings, LogOut, User, Award, Folder, ListTodo } from 'lucide-react';
+import { signOut } from 'firebase/auth';
+import { auth } from '@/config/firebase.config';
+import { useUser } from '@/contexts/UserContext';
 
 const Sidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const isActive = (path: string) => location.pathname === path;
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Log out the user from Firebase
+      setUser(null); // Clear the user from context
+      navigate('/login'); // Redirect to the login page
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   return (
     <div className="w-14 text-white flex flex-col justify-center items-center pt-16 pb-4">
@@ -102,9 +117,9 @@ const Sidebar = () => {
       </div>
       <div className="mt-auto">
         {/* Logout */}
-        <Link to="/logout" className="w-10 h-10 mb-4 hover:bg-[#ff5833] hover:text-[#302e2d] flex items-center justify-center rounded">
+        <button onClick={handleLogout} className="w-10 h-10 mb-4 hover:bg-[#ff5833] hover:text-[#302e2d] flex items-center justify-center rounded">
           <LogOut className="w-6 h-6" />
-        </Link>
+        </button>
       </div>
     </div>
   );
