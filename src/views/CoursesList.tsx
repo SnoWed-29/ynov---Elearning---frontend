@@ -1,75 +1,104 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import { Bookmark } from 'lucide-react';
+import { fetchAndDisplayModules } from '../services/course'; // Import the service function
+import { useUser } from '@/contexts/UserContext';
+interface Module {
+  id: string;
+  moduleName: string;
+  description: string;
+  estimatedTime: string | null;
+  niveauId: number;
+  isGlobal: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
 
 function CoursesList() {
+  const [specializedCourses, setSpecializedCourses] = useState<Module[]>([]);
+  const [globalCourses, setGlobalCourses] = useState<Module[]>([]);
+  const { additionalUserData } = useUser();
+  const userId = additionalUserData?.id; // Extract userId from additionalUserData
+
+  useEffect(() => {
+    const fetchModules = async () => {
+      if (!userId) {
+        console.error('User ID is not available');
+        return;
+      }
+
+      try {
+        const { relatedModules, globalModules } = await fetchAndDisplayModules(userId); // Call the service function
+        setSpecializedCourses(relatedModules);
+        setGlobalCourses(globalModules);
+      } catch (error) {
+        console.error('Error fetching modules:', error);
+      }
+    };
+
+    fetchModules();
+  }, [userId]);
+
   return (
-    <div className="grid grid-cols-5 gap-4 w-full">
-      <div className="p-4 grid grid-cols-3 space-y-4 col-span-3 gap-4 my-2 ">
-        <Link
-          to="/courses/01"
-          className="relative h-[165px]  transition-transform delay-50 duration-300 hover:scale-110 transition w-full  rounded-br-md rounded-bl-md shadow-[4px_4px_7px_rgba(0,0,0,0.59)] py-2 px-4 flex justify-around items-center flex-col"
-        >
-          <h2 className="w-[10em] whitespace-nowrap overflow-hidden text-ellipsis text-sm">
-            Gestion des Bases de Données - SQL
-          </h2>
-          <div className="absolute top-[-13px] left-[-1px] w-[50%] h-3 rounded-tr-[20px] bg-white border-t border-l border-r border-b-0 border-t-gray-300 border-l-gray-300 border-r-gray-300"></div>
-          <div className="absolute left-[0.8em] top-[-0.8em] w-[4em] h-[5px] bg-[#BD94F4] rounded-b-md"></div>
-        </Link>
-
-        <Link
-          to="/courses/01"
-          className="relative h-[165px] transition-transform delay-50 duration-300 hover:scale-110 transition w-full bg-white rounded-br-md rounded-bl-md shadow-[4px_4px_7px_rgba(0,0,0,0.59)] py-2 px-4 flex justify-around items-center flex-col"
-        >
-          <h2 className="w-[10em] whitespace-nowrap overflow-hidden text-ellipsis text-sm">
-            Gestion des Bases de Données - SQL
-          </h2>
-          <div className="absolute top-[-13px] left-[-1px] w-[50%] h-3 rounded-tr-[20px] bg-white border-t border-l border-r border-b-0 border-t-gray-300 border-l-gray-300 border-r-gray-300"></div>
-          <div className="absolute left-[0.8em] top-[-0.8em] w-[4em] h-[5px] bg-[#BD94F4] rounded-b-md"></div>
-        </Link>
-
-        <Link
-          to="/courses/01"
-          className="relative h-[165px] transition-transform delay-50 duration-300 hover:scale-110 transition w-full bg-white rounded-br-md rounded-bl-md shadow-[4px_4px_7px_rgba(0,0,0,0.59)] py-2 px-4 flex justify-around items-center flex-col"
-        >
-          <h2 className="w-[10em] whitespace-nowrap overflow-hidden text-ellipsis text-sm">
-            Gestion des Bases de Données - SQL
-          </h2>
-          <div className="absolute top-[-13px] left-[-1px] w-[50%] h-3 rounded-tr-[20px] bg-white border-t border-l border-r border-b-0 border-t-gray-300 border-l-gray-300 border-r-gray-300"></div>
-          <div className="absolute left-[0.8em] top-[-0.8em] w-[4em] h-[5px] bg-[#BD94F4] rounded-b-md"></div>
-        </Link>
-
-        <Link
-          to="/courses/01"
-          className="relative h-[165px] transition-transform delay-50 duration-300 hover:scale-110 transition w-full bg-white rounded-br-md rounded-bl-md shadow-[4px_4px_7px_rgba(0,0,0,0.59)] py-2 px-4 flex justify-around items-center flex-col"
-        >
-          <h2 className="w-[10em] whitespace-nowrap overflow-hidden text-ellipsis text-sm">
-            Gestion des Bases de Données - SQL
-          </h2>
-          <div className="absolute top-[-13px] left-[-1px] w-[50%] h-3 rounded-tr-[20px] bg-white border-t border-l border-r border-b-0 border-t-gray-300 border-l-gray-300 border-r-gray-300"></div>
-          <div className="absolute left-[0.8em] top-[-0.8em] w-[4em] h-[5px] bg-[#BD94F4] rounded-b-md"></div>
-        </Link>
-        <Link
-          to="/courses/01"
-          className="relative h-[165px] transition-transform delay-50 duration-300 hover:scale-110 transition w-full bg-white rounded-br-md rounded-bl-md shadow-[4px_4px_7px_rgba(0,0,0,0.59)] py-2 px-4 flex justify-around items-center flex-col"
-        >
-          <h2 className="w-[10em] whitespace-nowrap overflow-hidden text-ellipsis text-sm">
-            Gestion des Bases de Données - SQL
-          </h2>
-          <div className="absolute top-[-13px] left-[-1px] w-[50%] h-3 rounded-tr-[20px] bg-white border-t border-l border-r border-b-0 border-t-gray-300 border-l-gray-300 border-r-gray-300"></div>
-          <div className="absolute left-[0.8em] top-[-0.8em] w-[4em] h-[5px] bg-[#BD94F4] rounded-b-md"></div>
-        </Link>
-        <Link
-          to="/courses/01"
-          className="relative h-[165px] transition-transform delay-50 duration-300 hover:scale-110 transition w-full bg-white rounded-br-md rounded-bl-md shadow-[4px_4px_7px_rgba(0,0,0,0.59)] py-2 px-4 flex justify-around items-center flex-col"
-        >
-          <h2 className="w-[10em] whitespace-nowrap overflow-hidden text-ellipsis text-sm">
-            Gestion des Bases de Données - SQL
-          </h2>
-          <div className="absolute top-[-13px] left-[-1px] w-[50%] h-3 rounded-tr-[20px] bg-white border-t border-l border-r border-b-0 border-t-gray-300 border-l-gray-300 border-r-gray-300"></div>
-          <div className="absolute left-[0.8em] top-[-0.8em] w-[4em] h-[5px] bg-[#BD94F4] rounded-b-md"></div>
-        </Link>
+    <div className="flex flex-col">
+      <div className="flex w-full p-4">
+        <h1 className="text-2xl font-bold">Courses List</h1>
       </div>
-      <div className="col-span-2 bg-gradient-to-br from-blue-900/50 to-[#BD94F4]/50 rounded-4xl p-4 my-2"></div>
+
+      {/* Specialized Courses Section */}
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold mb-4">Specialized Courses</h2>
+        <div className="grid grid-cols-4 gap-4 w-full">
+          {specializedCourses.map((course) => (
+            <div
+              key={course.id}
+              className="flex flex-col space-y-6 border border-black rounded-4xl text-[#151314] py-2 px-4 bg-[#FCCC42]"
+            >
+              <div className="flex w-full justify-between secondFont">
+                <div className="flex text-[#f7f7f5] font-semibold bg-[#151314] rounded-2xl px-4 py-2">
+                  <span>{course.moduleName}</span>
+                </div>
+                <div className="flex">
+                  <Bookmark className="w-8 h-8" />
+                </div>
+              </div>
+              <div className="flex w-full justify-end">
+                
+                <div className="flex h-fit text-[#f7f7f5] bg-[#ff5833] rounded-xl px-4 py-2 ">
+                    <span>Continue</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Global Courses Section */}
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold mb-4">Global Courses</h2>
+        <div className="grid grid-cols-4 gap-4 w-full">
+          {globalCourses.map((course) => (
+            <div
+              key={course.id}
+              className="flex flex-col space-y-6 border border-black rounded-4xl text-[#151314] py-2 px-4 bg-[#BD94F4]"
+            >
+              <div className="flex w-full justify-between secondFont">
+                <div className="flex text-[#151314] font-semibold bg-[#FCCC42] rounded-2xl px-4 py-2">
+                  <span>{course.moduleName}</span>
+                </div>
+                <div className="flex">
+                  <Bookmark className="w-8 h-8" />
+                </div>
+              </div>
+              <div className="flex w-full justify-end">
+                
+                <div className="flex h-fit text-[#f7f7f5] bg-[#ff5833] rounded-xl px-4 py-2 ">
+                    <span>Continue</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

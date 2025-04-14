@@ -7,7 +7,8 @@ import { useUser } from '@/contexts/UserContext';
 function MainLayout() {
   const location = useLocation();
   const pathSegments = location.pathname.split('/').filter(segment => segment !== '');
-  const { additionalUserData } = useUser(); // Get the user from the context
+  const { additionalUserData } = useUser();
+  console.log( additionalUserData) // Get the user from the context
 
   return (
     <div className="h-screen bg-gradient-to-br from-blue-900/50 to-[#BD94F4]/50 flex items-center justify-center w-full">

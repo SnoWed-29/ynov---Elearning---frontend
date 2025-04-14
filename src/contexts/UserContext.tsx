@@ -1,5 +1,4 @@
-// src/contexts/UserContext.tsx
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import  { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, onAuthStateChanged } from 'firebase/auth';
 import { auth } from '@/config/firebase.config';
 
@@ -28,57 +27,65 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [additionalUserData, setAdditionalUserData] = useState<AdditionalUserData | null>(null);
     const [loading, setLoading] = useState(true);
+    const [hasFetchedUserData, setHasFetchedUserData] = useState(false); // Track if user data has been fetched
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
 
-            if (currentUser) {
+            if (currentUser && !additionalUserData && !hasFetchedUserData) { // Fetch only if logged in, no data yet, and haven't fetched
+                setLoading(true); // Start loading when fetching user data
                 try {
-                    console.log('Checking if backend user is created for UID:', currentUser.uid); // Debug log
+                    console.log('Fetching user data from backend for UID:', currentUser.uid); // Debug log
+                    const response = await fetch(`${BACKEND_URL}/api/checkUser/${currentUser.uid}`);
+                    console.log('Backend Response Status:', response.status); // Log the status code
+                    if (response.ok) {
+                        const responseData = await response.json(); // Get the full response object
+                        console.log('Parsed Backend Data:', responseData); // Log the parsed data
 
-                    // Poll the backend to check if the user is created
-                    const checkBackendUser = async () => {
-                        const response = await fetch(`${BACKEND_URL}/api/checkUser/${currentUser.uid}`);
-                        if (response.ok) {
-                            const data = await response.json();
-                            if (data.exists) {
-                                console.log('Backend user exists:', data.user); // Debug log
-                                setAdditionalUserData({
-                                    id: data.user.id,
-                                    fullName: data.user.fullName,
-                                    userName: data.user.userName,
-                                    email: data.user.email,
-                                    dob: data.user.dob,
-                                    profile_picture: data.user.profile_picture,
-                                    niveauxSpecialiteId: data.user.niveauxSpecialiteId,
-                                });
-                                return true;
-                            }
+                        if (responseData.exists && responseData.user) {
+                            const userData = responseData.user;
+                            setAdditionalUserData({
+                                id: userData.id,
+                                fullName: userData.fullName,
+                                userName: userData.userName,
+                                email: userData.email,
+                                dob: userData.dob,
+                                profile_picture: userData.profile_picture,
+                                niveauxSpecialiteId: userData.niveauxSpecialiteId,
+                            });
+                            setHasFetchedUserData(true); // Mark that data has been fetched
+                        } else {
+                            console.warn('Backend user not found or data structure incorrect.');
+                            setAdditionalUserData(null);
                         }
-                        return false;
-                    };
-
-                    // Poll the backend every 2 seconds until the user is created
-                    const interval = setInterval(async () => {
-                        const userCreated = await checkBackendUser();
-                        if (userCreated) {
-                            clearInterval(interval); // Stop polling once the user is created
+                    } else {
+                        console.error('Failed to fetch user data from backend:', response.status);
+                        try {
+                            const errorData = await response.json();
+                            console.error('Backend Error Details:', errorData); // Log error details if available
+                        } catch (error) {
+                            console.error('Failed to parse error response:', error);
                         }
-                    }, 2000);
+                        setAdditionalUserData(null); // Reset user data on failure
+                    }
                 } catch (error) {
-                    console.error('Error checking backend user creation:', error);
+                    console.error('Error fetching user data:', error);
+                    setAdditionalUserData(null); // Reset user data on error
+                } finally {
+                    setLoading(false); // Stop loading after attempting to fetch
                 }
-            } else {
+            } else if (!currentUser) {
                 setUser(null);
                 setAdditionalUserData(null);
+                setHasFetchedUserData(false); // Reset fetch status on logout
+            } else {
+                setLoading(false); // If user data is already in context, no need to load again
             }
-
-            setLoading(false); // Stop loading once the user state is determined
         });
 
         return () => unsubscribe(); // Cleanup the listener on unmount
-    }, []);
+    }, [user?.uid, additionalUserData, hasFetchedUserData]); // Re-run effect when user changes
 
     return (
         <UserContext.Provider value={{ user, setUser, loading, additionalUserData, setAdditionalUserData }}>

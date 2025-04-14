@@ -8,6 +8,7 @@ import PrivateRoute from '@/components/PrivateRoute';
 import MainLayout from '@/layouts/MainLayout';
 import Course from './views/Course';
 import CoursesList from './views/CoursesList';
+import NotFound from './views/NotFound';
 
 const App = () => {
     return (
@@ -28,12 +29,12 @@ const App = () => {
                         }
                     >
                         <Route index element={<Dashboard />} />
-                        <Route path="courses" element={<Course />} />
-                        <Route path="courses/1" element={<CoursesList />} />
+                        <Route path="courses/1" element={<Course />} />
+                        <Route path="courses" element={<CoursesList />} />
                     </Route>
 
                     {/* Fallback Route */}
-                    {/* <Route path="*" element={<NotFound />} /> */}
+                    <Route path="*" element={<NotFound />} />
                 </Routes>
             </Router>
         </UserProvider>
