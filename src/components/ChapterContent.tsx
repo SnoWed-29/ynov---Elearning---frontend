@@ -41,7 +41,7 @@ const ChapterContent: React.FC<ContentProps> = ({ chapterId, moduleId }) => {
         <div className="relative">
           <iframe
             className="w-full h-96 aspect-video object-cover rounded-4xl border-2 border-[#151314]"
-            src={chapterContent?.videoUrl || ''} // Assuming the content includes a video URL
+            src={chapterContent?.videoUrl || ''} 
             title="Course video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen

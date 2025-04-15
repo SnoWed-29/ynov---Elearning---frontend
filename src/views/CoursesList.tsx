@@ -54,7 +54,7 @@ function CoursesList() {
           {specializedCourses.map((course) => (
             <div
               key={course.id}
-              className="flex flex-col space-y-6 border border-black rounded-4xl text-[#151314] py-2 px-4 bg-[#FCCC42]"
+              className="flex flex-col space-y-6 shadow-xl hover:-translate-y-2 cursor-pointer transition-transform duration-300 rounded-4xl text-[#151314] py-2 px-4 bg-[#FCCC42]"
             >
               <div className="flex w-full justify-between secondFont">
                 <div className="flex text-[#f7f7f5] font-semibold bg-[#151314] rounded-2xl px-4 py-2">
@@ -84,7 +84,7 @@ function CoursesList() {
           {globalCourses.map((course) => (
             <div
               key={course.id}
-              className="flex flex-col space-y-6 border border-black rounded-4xl text-[#151314] py-2 px-4 bg-[#BD94F4]"
+              className="flex flex-col space-y-6 shadow-xl hover:-translate-y-2 cursor-pointer transition-transform duration-300 cursor-pointer rounded-4xl text-[#151314] py-2 px-4 bg-[#BD94F4]"
             >
               <div className="flex w-full justify-between secondFont">
                 <div className="flex text-[#151314] font-semibold bg-[#FCCC42] rounded-2xl px-4 py-2">

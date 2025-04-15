@@ -23,7 +23,7 @@ function Kpi() {
             </div>
         </div>
         <div className='grid grid-cols-3 gap-4 w-full'>
-            <div className="flex flex-col space-y-6  border border-black rounded-4xl text-[#151314] py-2 px-4 bg-[#FCCC42]">
+            <div className="flex flex-col space-y-6 shadow-xl hover:-translate-y-2 cursor-pointer transition-transform duration-300 rounded-4xl text-[#151314] py-2 px-4 bg-[#FCCC42]">
                 {/* course  +  bookmark */}
                 <div className="flex w-full justify-between secondFont">
                     <div className="flex text-[#f7f7f5] font-semibold bg-[#151314] rounded-2xl px-4 py-2">
@@ -69,7 +69,7 @@ function Kpi() {
                     </div>
                 </div>
             </div>
-            <div className="flex flex-col space-y-6  border border-black rounded-4xl text-[#151314] py-2 px-4 bg-[#BD94F4] ">
+            <div className="flex flex-col space-y-6  shadow-xl hover:-translate-y-2 cursor-pointer  transition-transform duration-300 rounded-4xl text-[#151314] py-2 px-4 bg-[#BD94F4] ">
                 {/* course  +  bookmark */}
                 <div className="flex w-full justify-between secondFont">
                     <div className="flex text-[#151314] font-semibold bg-[#FCCC42] rounded-2xl px-4 py-2">
@@ -115,7 +115,7 @@ function Kpi() {
                     </div>
                 </div>
             </div>
-            <div className="bg-[#bce7fe] flex flex-col space-y-6  border border-black rounded-4xl text-[#151314] py-2 px-4">
+            <div className="bg-[#bce7fe] flex flex-col space-y-6  shadow-xl hover:-translate-y-2 cursor-pointer   transition-transform duration-300 rounded-4xl text-[#151314] py-2 px-4">
                 {/* course  +  bookmark */}
                 <div className="flex w-full justify-between secondFont">
                     <div className="flex text-[#151314] font-semibold bg-[#BD94F4] rounded-2xl px-4 py-2">

@@ -18,7 +18,7 @@ function MainLayout() {
           <div className="px-6 py-2 overflow-y-auto bg-[#F7F7F5] flex-1 rounded-l-4xl rounded-r-4xl">
             <div className="flex w-full justify-between">
               <h2 className="text-md font-bold text-[#8b8c89]">
-                Welcome To <span className="text-[#302e2d]">Ynov Learning</span>
+                Welcome To <span className="text-[#FF5835]">Ynov Learning</span>
               </h2>
               <div className="flex space-x-2">
                 <User className="w-8 h-8 text-[#302e2d] ml-auto rounded-full border" />

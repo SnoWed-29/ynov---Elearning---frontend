@@ -10,6 +10,7 @@ import Course from './views/Course';
 import CoursesList from './views/CoursesList';
 import NotFound from './views/NotFound';
 import ChapterPage from './views/ChapterPage';
+import Quiz from './views/Quiz';
 
 const App = () => {
     return (
@@ -33,6 +34,8 @@ const App = () => {
                         <Route path="courses" element={<CoursesList />} />
                         <Route path="courses/:id" element={<Course />} />
                         <Route path="/courses/:courseId/chapter/:chapterId" element={<ChapterPage />} />
+
+                         <Route path="quiz" element={<Quiz />} />   
                     </Route>
 
                     {/* Fallback Route */}
