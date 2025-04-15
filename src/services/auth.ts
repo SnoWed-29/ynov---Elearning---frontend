@@ -4,11 +4,11 @@ interface RegistrationData {
     uid: string;
     userName: string;
     email: string;
-    password: string; // Add password to the interface
+    password: string; 
     dob?: string;
     Specialite: string;
     fullName: string;
-    niveau: string; // Assuming niveau is a string from the Select component
+    niveau: string; 
 }
 
 export const sendRegistrationData = async (data: RegistrationData): Promise<Response> => {

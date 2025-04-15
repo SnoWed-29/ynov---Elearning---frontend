@@ -1,20 +1,16 @@
-// src/components/PrivateRoute.tsx
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
 
-interface PrivateRouteProps {
-    children: React.ReactNode;
-}
+const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user, loading } = useUser();
+  const location = useLocation();
 
-const PrivateRoute = ({ children }: PrivateRouteProps) => {
-    const { user } = useUser();
+  if (loading) {
+    return <div className="p-4">Loading...</div>; // Or a spinner component
+  }
 
-    if (!user) {
-        return <Navigate to="/login" />;
-    }
-
-    return <>{children}</>;
+  return user ? <>{children}</> : <Navigate to="/login" state={{ from: location }} />;
 };
 
 export default PrivateRoute;

@@ -9,6 +9,7 @@ import MainLayout from '@/layouts/MainLayout';
 import Course from './views/Course';
 import CoursesList from './views/CoursesList';
 import NotFound from './views/NotFound';
+import ChapterPage from './views/ChapterPage';
 
 const App = () => {
     return (
@@ -29,8 +30,9 @@ const App = () => {
                         }
                     >
                         <Route index element={<Dashboard />} />
-                        <Route path="courses/1" element={<Course />} />
                         <Route path="courses" element={<CoursesList />} />
+                        <Route path="courses/:id" element={<Course />} />
+                        <Route path="/courses/:courseId/chapter/:chapterId" element={<ChapterPage />} />
                     </Route>
 
                     {/* Fallback Route */}

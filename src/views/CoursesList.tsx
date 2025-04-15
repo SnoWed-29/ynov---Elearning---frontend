@@ -1,7 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import { useEffect, useState } from 'react';
 import { Bookmark } from 'lucide-react';
 import { fetchAndDisplayModules } from '../services/course'; // Import the service function
 import { useUser } from '@/contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
+
 interface Module {
   id: string;
   moduleName: string;
@@ -18,6 +20,7 @@ function CoursesList() {
   const [globalCourses, setGlobalCourses] = useState<Module[]>([]);
   const { additionalUserData } = useUser();
   const userId = additionalUserData?.id; // Extract userId from additionalUserData
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchModules = async () => {
@@ -62,10 +65,12 @@ function CoursesList() {
                 </div>
               </div>
               <div className="flex w-full justify-end">
-                
-                <div className="flex h-fit text-[#f7f7f5] bg-[#ff5833] rounded-xl px-4 py-2 ">
-                    <span>Continue</span>
-                </div>
+                <button
+                  onClick={() => navigate(`/courses/${course.id}`)}
+                  className="flex h-fit text-[#f7f7f5] bg-[#ff5833] rounded-xl px-4 py-2"
+                >
+                  <span>Continue</span>
+                </button>
               </div>
             </div>
           ))}
@@ -90,10 +95,12 @@ function CoursesList() {
                 </div>
               </div>
               <div className="flex w-full justify-end">
-                
-                <div className="flex h-fit text-[#f7f7f5] bg-[#ff5833] rounded-xl px-4 py-2 ">
-                    <span>Continue</span>
-                </div>
+                <button
+                  onClick={() => navigate(`/courses/${course.id}`)}
+                  className="flex h-fit text-[#f7f7f5] bg-[#ff5833] rounded-xl px-4 py-2"
+                >
+                  <span>Continue</span>
+                </button>
               </div>
             </div>
           ))}
